@@ -9,23 +9,26 @@ services:
   ports:
    - "3306:3306"
   networks:
-   BridgeZadanie1:
+   Bridge-Zadanie-1:
     ipv4_address: 10.0.10.3
   environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "JRadomski"
-      MYSQL_USER: "admin"
-      MYSQL_PASSWORD: "admin"
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: chmury
+      MYSQL_USER: JRadomski
+      MYSQL_PASSWORD: 1234
  java:
-  image: agnieszkasia/zad:latest
+  image: urcherion/radomskichmura:latest
   stdin_open: true
   container_name: JRadomski
   depends_on:
    - mysql
+  links:
+   - mysql
   networks:
-   - BridgeZadanie1
+   - Bridge-Zadanie-1:
+      ipv4_address: 10.0.10.4
 networks:
- BridgeZadanie1:
+ Bridge-Zadanie-1:
   driver: bridge
   ipam:
    config:
