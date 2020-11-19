@@ -1,34 +1,33 @@
 version: "3.7"
 services: 
- mysql:
+ Full2020_086292:
   image: mysql:latest
   restart: always
-  container_name: Full2020_086399
+  container_name: Full2020_086292
   volumes:
    - db_data:/var/lib/mysql
   ports:
    - "3306:3306"
   networks:
-   Bridge-Zadanie-1:
+   BridgeZadanie1:
     ipv4_address: 10.0.10.3
   environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: chmury
-      MYSQL_USER: JRadomski
-      MYSQL_PASSWORD: 1234
+     - MYSQL_ROOT_PASSWORD=root
+     - MYSQL_DATABASE=AGLINKA
+     - MYSQL_USER=admin
+     - MYSQL_PASSWORD=admin
  java:
-  image: urcherion/radomskichmura:latest
+  image: agnieszkasia/zad:latest
   stdin_open: true
-  container_name: JRadomski
+  container_name: AGlinka
   depends_on:
-   - mysql
+   - Full2020_086292
   links:
-   - mysql
+   - Full2020_086292
   networks:
-   - Bridge-Zadanie-1:
-      ipv4_address: 10.0.10.4
+   - BridgeZadanie1
 networks:
- Bridge-Zadanie-1:
+ BridgeZadanie1:
   driver: bridge
   ipam:
    config:
