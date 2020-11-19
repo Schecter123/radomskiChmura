@@ -17,7 +17,7 @@ services:
      - MYSQL_USER=JRadomski
      - MYSQL_PASSWORD=root
  java:
-  image: agnieszkasia/zad:latest
+  image: urcherion/radomskichmura:latest
   stdin_open: true
   container_name: JRadomski
   depends_on:
