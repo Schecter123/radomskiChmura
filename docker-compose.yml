@@ -1,0 +1,34 @@
+version: "3.7"
+services: 
+ mysql:
+  image: mysql:latest
+  restart: always
+  container_name: Full2020_086399
+  volumes:
+   - db_data:/var/lib/mysql
+  ports:
+   - "3306:3306"
+  networks:
+   BridgeZadanie1:
+    ipv4_address: 10.0.10.3
+  environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "JRadomski"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "admin"
+ java:
+  image: agnieszkasia/zad:latest
+  stdin_open: true
+  container_name: JRadomski
+  depends_on:
+   - mysql
+  networks:
+   - BridgeZadanie1
+networks:
+ BridgeZadanie1:
+  driver: bridge
+  ipam:
+   config:
+    - subnet: 10.0.10.0/24
+volumes:
+ db_data: {}
