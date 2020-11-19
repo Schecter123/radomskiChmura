@@ -1,9 +1,9 @@
 version: "3.7"
 services: 
- Full2020_086292:
+ Full2020_086399:
   image: mysql:latest
   restart: always
-  container_name: Full2020_086292
+  container_name: Full2020_086399
   volumes:
    - db_data:/var/lib/mysql
   ports:
@@ -21,9 +21,9 @@ services:
   stdin_open: true
   container_name: AGlinka
   depends_on:
-   - Full2020_086292
+   - Full2020_086399
   links:
-   - Full2020_086292
+   - Full2020_086399
   networks:
    - BridgeZadanie1
 networks:
