@@ -2,137 +2,137 @@ import java.sql.*;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+
 public class Main {
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/AGLINKA";
 
-    static final String USER = "admin";
-    static final String PASS = "admin";
-
-    static Scanner in = new Scanner( System.in);
-    private static final String CREATE_TABLE_CARS = "CREATE TABLE IF NOT EXISTS Cars (ID int, BRAND varchar(255), MODEL varchar(255), PRODUCTION_YEAR varchar(255), TYPE varchar(255) );";
-    private static final String SELECT_ALL_FROM_CARS = "SELECT ID, BRAND, MODEL, PRODUCTION_YEAR, TYPE FROM Cars";
+    static Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
 
-        try(Connection conn = DriverManager.getConnection(DB_URL,USER,PASS);
-            Statement stmt = conn.createStatement()) {
-            Class.forName("com.mysql.jdbc.Driver");
-            TimeUnit.SECONDS.sleep(10);
-            System.out.println("Connecting to database...");
-            stmt.executeUpdate(CREATE_TABLE_CARS);
+        try {
+            while (DriverManager.getConnection("jdbc:mysql://localhost:3306/chmuraTest", "JRadomski", "root") != null){
+                System.out.println("Lączenie z bazą, proszę czekać");
+                TimeUnit.SECONDS.sleep(10);
+
+            }
+
+        }catch (SQLException | InterruptedException e) {
+
+        }
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chmuraTest", "JRadomski", "root");
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Students (ID int NOT NULL AUTO_INCREMENT, Imie varchar(255), Nazwisko varchar(255), Miasto varchar(255), Indeks integer(255), PRIMARY KEY (ID) );");
             String selectedOperation;
-            do
-            {
-                System.out.println("1. Show DB data\n2. Insert car\n3. Edit car by ID\n4. Delete car by ID\nS. Press E to Exit");
+            do {
+                System.out.println("1. Pokaż dane bazy\n2. Dodaj studenta\n3. Edytuj studenta\n4. Usuń studenta\nS. Naciśnij E by wyjść");
                 selectedOperation = in.nextLine();
-                switch( selectedOperation )
-                {
-                    case "1" :
+                switch (selectedOperation) {
+                    case "1":
                         getResults(stmt);
                         break;
-                    case "2" :
-                        insertCar(stmt);
+                    case "2":
+                        insertStudent(stmt);
                         break;
-                    case "3" :
-                        updateCar(stmt);
+                    case "3":
+                        updateStudent(stmt);
                         break;
-                    case "4" :
-                        deleteCarById(stmt);
+                    case "4":
+                        deleteStudent(stmt);
                         break;
                 }
-            }while (!selectedOperation.toUpperCase().equals("E"));
-        } catch (InterruptedException | SQLException | ClassNotFoundException e) {
+            } while (!selectedOperation.toUpperCase().equals("E"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void deleteCarById(Statement stmt) throws SQLException {
-        ResultSet rsss = stmt.executeQuery(SELECT_ALL_FROM_CARS);
+    private static void deleteStudent(Statement stmt) throws SQLException {
+        ResultSet rsss = stmt.executeQuery("SELECT ID, Imie, Nazwisko, Miasto, Indeks FROM Students");
         printOutHeader();
         printOutResult(rsss);
         rsss.close();
-        System.out.println("Enter ID to delete");
+        System.out.println("Podaj ID studenta, który chcesz usunąć");
         final String id = in.nextLine();
-        final String deleteSql = " DELETE FROM Cars WHERE ID= '"+id+"';";
+        final String deleteSql = " DELETE FROM Students WHERE ID= '" + id + "';";
         stmt.executeUpdate(deleteSql);
     }
 
-    private static void updateCar(Statement stmt) throws SQLException {
-        String type;
+    private static void updateStudent(Statement stmt) throws SQLException {
         String id;
-        String brand;
-        String model;
+        String imie;
+        String nazwisko;
+        String miaso;
+        int indeks;
         String sql;
-        String productionYear;
-        ResultSet rss = stmt.executeQuery(SELECT_ALL_FROM_CARS);
+
+        ResultSet rss = stmt.executeQuery("SELECT ID, Imie, Nazwisko, Miasto, Indeks FROM Students");
         printOutHeader();
 
         printOutResult(rss);
         rss.close();
-        System.out.println("Enter ID to edit");
+        System.out.println("Podaj ID studenta, którego chcesz edytować");
         id = in.nextLine();
 
-        System.out.println("Brand: ");
-        brand = in.nextLine();
+        System.out.println("Imie: ");
+        imie = in.nextLine();
 
-        System.out.println("Model: ");
-        model = in.nextLine();
+        System.out.println("Nazwisko: ");
+        nazwisko = in.nextLine();
 
-        System.out.println("Production year:");
-        productionYear = in.nextLine();
+        System.out.println("Miasto:");
+        miaso = in.nextLine();
 
-        System.out.println("Vehicle type");
-        type = in.nextLine();
-        sql = " UPDATE Cars SET MODEL = '"+model+"' , BRAND = '"+brand+"', PRODUCTION_YEAR = '"+productionYear+"',TYPE ='"+type+"' WHERE ID= '"+id+"';";
+        System.out.println("Numer indeksu");
+        indeks = in.nextInt();
+        sql = " UPDATE Students SET Imie = '" + imie + "' , Nazwisko = '" + nazwisko + "', Miasto = '" + miaso + "',Indeks ='" + indeks + "' WHERE ID= '" + id + "';";
         stmt.executeUpdate(sql);
     }
 
-    private static void insertCar(Statement stmt) throws SQLException {
-        System.out.println("ID");
-        final String id = in.nextLine();
+    private static void insertStudent(Statement stmt) throws SQLException {
 
-        System.out.println("Brand:");
-        final String brand = in.nextLine();
 
-        System.out.println("Model");
-        final String model = in.nextLine();
+        System.out.println("Imie:");
+        final String imie = in.nextLine();
 
-        System.out.println("Production year:");
-        final String productionYear = in.nextLine();
+        System.out.println("Nazwisko");
+        final String nazwisko = in.nextLine();
 
-        System.out.println("Vehicle type");
-        final String type = in.nextLine();
-        
-        String sql = " INSERT INTO Cars (ID, MODEL, BRAND, PRODUCTION_YEAR,TYPE) VALUES ('"+id+"', '"+model+"', '"+brand+"', '"+productionYear+"','"+type+"')";
+        System.out.println("Miasto");
+        final String miasto = in.nextLine();
+
+        System.out.println("Numer indeksu");
+        final int indeks = in.nextInt();
+
+        String sql = " INSERT INTO Students (Imie, Nazwisko, Miasto, Indeks) VALUES ('" + imie + "', '" + nazwisko + "', '" + miasto + "','" + indeks + "')";
         stmt.executeUpdate(sql);
     }
 
     private static void getResults(Statement stmt) throws SQLException {
-        ResultSet rs = stmt.executeQuery(SELECT_ALL_FROM_CARS);
+        ResultSet rs = stmt.executeQuery("SELECT ID, Imie, Nazwisko, Miasto, Indeks FROM Students");
         printOutHeader();
         printOutResult(rs);
         rs.close();
     }
 
     private static void printOutHeader() {
-        System.out.println("ID    BRAND    MODEL    PRODUCTION_YEAR    TYPE");
+        System.out.println("ID    Imie    Nazwisko    Miasto    Indeks");
     }
 
     private static void printOutResult(ResultSet rs) throws SQLException {
         int id;
-        String first;
-        String last;
-        String address;
-        String city;
+        String imie;
+        String nazwisko;
+        String miasto;
+        int indeks;
         while (rs.next()) {
             id = rs.getInt("ID");
-            first = rs.getString("BRAND");
-            last = rs.getString("MODEL");
-            address = rs.getString("PRODUCTION_YEAR");
-            city = rs.getString("TYPE");
+            imie = rs.getString("Imie");
+            nazwisko = rs.getString("Nazwisko");
+            miasto = rs.getString("Miasto");
+            indeks = rs.getInt("Indeks");
 
-            System.out.println(id + "    " + first + "    " + last + "    " + address + "    " + city);
+            System.out.println(id + "    " + imie + "    " + nazwisko + "    " + miasto + "    " + indeks);
         }
     }
 }
